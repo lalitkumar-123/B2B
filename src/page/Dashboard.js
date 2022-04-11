@@ -11,8 +11,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DataGrid } from '@mui/x-data-grid';
-import { Idcomponent } from './Delete.js';
-import { Eidcomponent } from './Edit.js';
 import axios from 'axios';
 import '../css/Dashboard.css';
 
@@ -45,11 +43,11 @@ const columns = [
   { field: 'baseline_create_date', headerName: 'Baseline Create Date', width: 160},
   { field: 'cust_payment_terms', headerName: 'Customer Payment Terms', width: 200},
   { field: 'invoice_id', headerName: 'Invoice Id', width: 140},
+  { field: 'aging_bucket', headerName: 'Aging Bucket', width: 140},
 ];
 
 function Dashboard() 
 {
-    console.log(window.innerHeight);
     const [custnumber,setCustnumber] = useState();
     const [tabledata,setTabledata] = useState([]);
     const [open,setOpen] = useState(false);
@@ -58,6 +56,7 @@ function Dashboard()
     const [invoiceid,setInvoiceid] = useState();
     const [customernum,setCustomernum] = useState();
     const [ids,setIds] = useState([]);
+    const [docids,setDocids] = useState([]); 
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -83,44 +82,106 @@ function Dashboard()
         setInvoiceid(e.target.value);
     }
 
-    const handleSubmit = (e) => {
+    const setDef = () => {
+        setCustnumber();
+        setBusinessyear();
+        setInvoiceid();
+        setDocumentid();
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(customernum + " " + businessyear + " " + documentid+ " " + invoiceid);
-        axios.get(`http://localhost:8080/demo/adv_search?doc_id=${documentid}&inv_id=${invoiceid}&buis_year=${businessyear}&cus_number=${customernum}`)
+        if(customernum === undefined || businessyear === undefined || documentid === undefined || invoiceid === undefined)
+        {
+            alert("Please enter all required fields");
+            setDef();
+            handleClose();
+            return;
+        }
+        await axios.get(`http://localhost:8080/demo/adv_search?doc_id=${documentid}&inv_id=${invoiceid}&buis_year=${businessyear}&cus_number=${customernum}`)
         .then((res) => {setTabledata(res.data)})
         .catch((error) => {console.log(error);})
+        setDef();
         handleClose();
     }
 
-    useEffect(() => {
+    useEffect( async () => {
         const url = `http://localhost:8080/demo/search?c_number=${custnumber}`;
-        axios({baseURL:url,method:'GET'})
+        await axios({baseURL:url,method:'GET'})
         .then((res) => setTabledata(res.data))
         .catch((error) => console.log(error));
     },[custnumber]);
 
-    useEffect(() => {
+    useEffect( async () => {
         const url = "http://localhost:8080/demo/table";
-        axios({baseURL:url,method:'GET'})
+        await axios({baseURL:url,method:'GET'})
         .then((res) => setTabledata(res.data))
         .catch((error) => console.log(error));
     }, []);
 
-    useEffect(() =>{
-        Idcomponent(ids);
-        Eidcomponent(ids);
-    },[ids]);
+    const handlePreSubmit = async (e) => {
+        e.preventDefault();
+        let sz = docids.length;
+
+        let query = '';
+        for(let i = 0; i < sz; i++) 
+        {
+            if(i == sz - 1) 
+            { 
+                query +=  'data=' + docids[i];          
+            }
+            else
+            { 
+                query +=  'data=' + docids[i] + '&';          
+            }
+        }
+
+        await axios.post(`http://127.0.0.1:5000/get_prediction?${query}`)
+        .then(async (res) => {
+            console.log(res);
+            if(res.data.length == 0)
+            {  
+                for(let i=0; i<docids.length; i++) 
+                {
+                    await axios.get(`http://localhost:8080/demo/predict?doc=${docids[i]}&age=${'N/A'}`)
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                }
+            }
+            else
+            {
+                for(let i=0; i<res.data.length; i++) 
+                {
+                    await axios.get(`http://localhost:8080/demo/predict?doc=${res.data[i].doc_id}&age=${res.data[i].aging_bucket}`)
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                }
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        window.location = "/";
+    }
 
     return(
         <>
         <Header/>
         <div style={{margin: "1rem", color: "white", textAlign:"center", display:"flex"}} className="dashboard">
-            <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}}>PREDICT</Button>
-            <Button variant="outlined" style={{width:"14%", height:"4%", color:"white"}}>ANALYTICS VIEW</Button>
-            <Button variant="outlined" style={{width:"16%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)}>ADVANCED SEARCH</Button>
+            <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handlePreSubmit(e)} disabled={docids.length < 1} disableRipple>PREDICT</Button>
+            <Button variant="outlined" style={{width:"14%", height:"4%", color:"white"}} disableRipple>ANALYTICS VIEW</Button>
+            <Button variant="outlined" style={{width:"16%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disableRipple>ADVANCED SEARCH</Button>
             <Dialog open={open} close={handleClose}>
-                    <DialogTitle>ADVANCED SEARCH</DialogTitle>
-                    <DialogContent style={{height:"30vh"}}>
+                    <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Advanced Search</DialogTitle>
+                    <DialogContent  style={{height:"28vh", backgroundColor:"#58687e", color:"white"}}>
                         <div>
                         <TextField
                             style={addstyle.textStyle}
@@ -131,6 +192,7 @@ function Dashboard()
                                 shrink: true,
                             }}
                             onChange={handledocumentid}
+                            inputProps={{ style: {color: 'white'}}}
                         />
                         <TextField
                             style={addstyle.textStyle}
@@ -141,6 +203,7 @@ function Dashboard()
                                 shrink: true,
                             }}
                             onChange={handleinvoiceid}
+                            inputProps={{ style: {color: 'white'}}}
                         />
                         <TextField
                             style={addstyle.textStyle}
@@ -151,6 +214,7 @@ function Dashboard()
                                 shrink: true,
                             }}
                             onChange={handlecustomernum}
+                            inputProps={{ style: {color: 'white'}}}
                         />
                         <TextField
                             style={addstyle.textStyle}
@@ -161,12 +225,13 @@ function Dashboard()
                                 shrink: true,
                             }}
                             onChange={handlebusinessyear}
+                            inputProps={{ style: {color: 'white'}}}
                         />
                         </div>
                     </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleSubmit}>Search</Button>
-                        <Button onClick={handleClose}>Cancel</Button>
+                    <DialogActions style={{backgroundColor:"#58687e"}}>
+                        <Button variant="outlined" onClick={handleSubmit}  style={{width:"288px", color:"white"}} disableRipple>Search</Button>
+                        <Button variant="outlined" onClick={handleClose}  style={{width:"288px", color:"white"}} disableRipple>Cancel</Button>
                     </DialogActions>
                 </Dialog>
             <input type="text" placeholder="Search Customer Id" className="input" onChange={(e) => {setCustnumber(e.target.value)}}/>  
@@ -186,6 +251,12 @@ function Dashboard()
               checkboxSelection
               onSelectionModelChange={(id) => {
                 setIds(id);
+                const dump = [];
+                for(let i = 0; i < id.length; i++)
+                {
+                    dump.push(tabledata[id[i]-1]['doc_id']);  
+                }
+                setDocids(dump);
               }}
           />
         </div>

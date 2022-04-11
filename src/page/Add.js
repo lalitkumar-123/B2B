@@ -12,18 +12,19 @@ const addstyle = {
   textStyle:{
     position:"relative",
     marginLeft:"2.5rem",
+    width:"140px",
   },
   dateStyle:{
     position:"relative",
     marginLeft:"2.5rem",
-    width:"221px",
+    width:"140px",
   }
 }
 
 export default function Add() 
 {
     const [businesscode,setBusinesscode] = useState();
-    const [customername,setCustomername] = useState();
+    const [customernumber,setCustomernumber] = useState();
     const [cleardate,setCleardate] = useState();
     const [businessyear,setBusinessyear] = useState();
     const [documentid,setDocumentid] = useState();
@@ -51,8 +52,8 @@ export default function Add()
         setBusinesscode(e.target.value);
     }
 
-    const handlecustomername = (e) => {
-        setCustomername(e.target.value);
+    const handlecustomernumber = (e) => {
+        setCustomernumber(e.target.value);
     }
 
     const handlecleardate = (e) => {
@@ -107,26 +108,56 @@ export default function Add()
         setInvoiceid(e.target.value);
     }
 
-    const handleSubmit = (e) => {
+    const setDef = () => {
+        setBusinesscode();
+        setCustomernumber();
+        setCleardate();
+        setBusinessyear();
+        setDocumentid();
+        setPostingdate();
+        setDocumentcreatedate();
+        setDuedate();
+        setInvoicecurrency();
+        setDocumenttype();
+        setPostingid();
+        setTotalopenamount();
+        setBaselinecreatedate();
+        setCustomerpaymentterm();
+        setInvoiceid();
+        setOpen();
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(businesscode + " " + customername + " " + cleardate + " " + businessyear + " " + documentid + " " + postingdate + " " + documentcreatedate + " " + duedate + " " + invoicecurrency + " " + documenttype + " " + postingid + " " + totalopenamount + " " + baselinecreatedate + " " + customerpaymentterm + " " + invoiceid);
-        axios.get(`http://localhost:8080/demo/add?b_code=${businesscode}&c_number=${customername}&c_date=${cleardate}&b_year=${businessyear}&doc_id=${documentid}&pos_date=${postingdate}&doc_create_date=${documentcreatedate}&due_date=${duedate}&invoice_curr=${invoicecurrency}&doc_type=${documenttype}&posting_id=${postingid}&total_open=${totalopenamount}&bas_create_date=${baselinecreatedate}&cust_pay_term=${customerpaymentterm}&inv_id=${invoiceid}`)
+        if(businesscode === undefined || customernumber === undefined || cleardate === undefined || businessyear === undefined || documentid === undefined || postingdate === undefined || documentcreatedate === undefined || duedate === undefined || invoicecurrency === undefined || documenttype === undefined || postingid === undefined || totalopenamount === undefined || baselinecreatedate === undefined || customerpaymentterm === undefined || invoiceid === undefined)
+        {
+            alert("Please enter all required fields");
+            setDef();
+            handleClose();
+            return;
+        }
+        await axios.get(`http://localhost:8080/demo/add?b_code=${businesscode}&c_number=${customernumber}&c_date=${cleardate}&b_year=${businessyear}&doc_id=${documentid}&pos_date=${postingdate}&doc_create_date=${documentcreatedate}&due_date=${duedate}&invoice_curr=${invoicecurrency}&doc_type=${documenttype}&posting_id=${postingid}&total_open=${totalopenamount}&bas_create_date=${baselinecreatedate}&cust_pay_term=${customerpaymentterm}&inv_id=${invoiceid}`)
         .then((res) => {
             console.log(res);
+            alert("Data successfully added");
+            setDef();
+            handleClose();
         })
         .catch((error) => {
             console.log(error);
+            alert("Data not added");
+            setDef();
+            handleClose();
         })
-        handleClose();
         window.location = "/";
     }
     
     return (
         <>
-            <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)}>ADD</Button>
+            <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disableRipple>ADD</Button>
             <Dialog open={open} close={handleClose} fullWidth>
-                <DialogTitle>ADD</DialogTitle>
-                <DialogContent>
+                <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Add</DialogTitle>
+                <DialogContent style={{height:"60vh", backgroundColor:"#58687e", color:"white"}}> 
                     <div>
                     <TextField
                         className="inputfield"
@@ -138,17 +169,21 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlebusinesscode}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
                         style={addstyle.textStyle}
-                        label="Customer Name"
+                        label="Customer Number"
                         required
                         margin="normal"
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        onChange={handlecustomername}
+                        onChange={handlecustomernumber}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -161,7 +196,10 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlecleardate}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
+                    <br/>
                     <TextField
                         className="inputfield"
                         style={addstyle.textStyle}
@@ -172,6 +210,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlebusinessyear}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -183,6 +223,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handledocumentid}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -195,7 +237,10 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlepostingdate}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
+                    <br/>
                     <TextField
                         className="inputfield"
                         style={addstyle.dateStyle}
@@ -207,6 +252,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handledocumentcreatedate}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -219,6 +266,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handleduedate}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -230,7 +279,10 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handleinvoicecurrency}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
+                    <br/>
                     <TextField
                         className="inputfield"
                         style={addstyle.textStyle}
@@ -241,6 +293,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handledocumenttype}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -252,18 +306,23 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlepostingid}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
                         style={addstyle.textStyle}
-                        label="Toatl Open Amount"
+                        label="Total Open Amount"
                         required
                         margin="normal"
                         InputLabelProps={{
                             shrink: true,
                         }}
                         onChange={handletotalopenamount}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
+                    <br/>
                     <TextField
                         className="inputfield"
                         style={addstyle.dateStyle}
@@ -275,6 +334,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlebaselinecreatedate}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -286,6 +347,8 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handlecustomerpaymentterms}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -297,12 +360,14 @@ export default function Add()
                             shrink: true,
                         }}
                         onChange={handleinvoiceid}
+                        size="small"
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     </div>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleSubmit}>Add</Button>
-                    <Button onClick={handleClose}>Cancel</Button>
+                <DialogActions style={{backgroundColor:"#58687e"}}>
+                    <Button variant="outlined" onClick={handleSubmit} style={{width:"290px", color:"white"}} disableRipple>Add</Button>
+                    <Button variant="outlined" onClick={handleClose} style={{width:"290px", color:"white"}} disableRipple>Cancel</Button>
                 </DialogActions>
             </Dialog>
         </>

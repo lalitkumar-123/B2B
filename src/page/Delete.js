@@ -6,13 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 
-var ids = [];
-
-export const Idcomponent = (props) => {
-  ids = props;
-  return(props);
-}
-
 export default function Delete(props) {
 
   var id = props.data;
@@ -26,12 +19,12 @@ export default function Delete(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
       e.preventDefault();
       let sz = id.length;
       for(let i = 0; i < sz; i++) 
       {
-        axios.get(`http://localhost:8080/demo/delete?sl_no=${id[i]}`)
+        await axios.get(`http://localhost:8080/demo/delete?sl_no=${id[i]}`)
         .then((res) => {
             console.log(res);
         })
@@ -45,17 +38,17 @@ export default function Delete(props) {
 
   return (
     <>
-        <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disabled={id.length < 1}>DELETE</Button>
+        <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disabled={id.length < 1} disableRipple>DELETE</Button>
         <Dialog open={open} close={handleClose}>
-                <DialogTitle>DELETE RECORDS ?</DialogTitle>
-                <DialogContent style={{height:"30vh"}}>
+                <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Delete Records ?</DialogTitle>
+                <DialogContent style={{height:"20vh", backgroundColor:"#58687e", color:"white"}}>
                     <div>
-                      <p>Are you sure you want to delete these records?</p>
+                      <p>Are you sure you want to delete these record[s]?</p>
                     </div>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleSubmit}>Delete</Button>
-                    <Button onClick={handleClose}>Cancel</Button>
+                <DialogActions style={{backgroundColor:"#58687e"}}>
+                    <Button variant="outlined" onClick={handleSubmit} style={{width:"200px", color:"white"}} disableRipple>Delete</Button>
+                    <Button variant="outlined" onClick={handleClose} style={{width:"200px", color:"white"}} disableRipple>Cancel</Button>
                 </DialogActions>
             </Dialog>
     </>

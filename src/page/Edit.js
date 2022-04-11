@@ -7,13 +7,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 
-var ids = [];
-
-export const Eidcomponent = (props) => {
-  ids = props;
-  return(props);
-}
-
 export default function Edit(props) {
 
     var id = props.data;
@@ -31,11 +24,11 @@ export default function Edit(props) {
         },
     }
 
-    useEffect(() => {
+    useEffect( async () => {
         if(id.length === 1)
         { 
             const slno = id[0];
-            axios.get(`http://localhost:8080/demo/retrieve?sl_no=${slno}`)
+            await axios.get(`http://localhost:8080/demo/retrieve?sl_no=${slno}`)
             .then((res) => {
                 setDefinvoicecur(res.data[0].invoice_currency);
                 setDefcustpayterms(res.data[0].cust_payment_terms);
@@ -62,11 +55,11 @@ export default function Edit(props) {
         setCustomerpaymentterm(e.target.value);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(invoicecurrency + " " + customerpaymentterm);
         const slno = id[0];
-        axios.get(`http://localhost:8080/demo/edit?inv_curr=${invoicecurrency}&cust_pay_term=${customerpaymentterm}&sl_no=${slno}`)
+        await axios.get(`http://localhost:8080/demo/edit?inv_curr=${invoicecurrency}&cust_pay_term=${customerpaymentterm}&sl_no=${slno}`)
         .then((res) => {
             console.log(res);
         })
@@ -79,10 +72,10 @@ export default function Edit(props) {
 
     return (
         <>
-            <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disabled={id.length !== 1}>EDIT</Button>
+            <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disabled={id.length !== 1} disableRipple>EDIT</Button>
             <Dialog open={open} close={handleClose}>
-                <DialogTitle>EDIT</DialogTitle>
-                <DialogContent style={{height:"30vh"}}>
+                <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Edit</DialogTitle>
+                <DialogContent style={{height:"20vh", backgroundColor:"#58687e", color:"white"}}>
                     <div>
                     <TextField
                         style={addstyle.textStyle}
@@ -94,6 +87,7 @@ export default function Edit(props) {
                             shrink: true,
                         }}
                         onChange={handleinvoicecurrency}
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     <TextField
                         style={addstyle.textStyle}
@@ -105,12 +99,13 @@ export default function Edit(props) {
                             shrink: true,
                         }}
                         onChange={handlecustomerpaymentterms}
+                        inputProps={{ style: {color: 'white'}}}
                     />
                     </div>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleSubmit}>Edit</Button>
-                    <Button onClick={handleClose}>Cancel</Button>
+                <DialogActions style={{backgroundColor:"#58687e"}}>
+                    <Button variant="outlined" onClick={handleSubmit} style={{width:"235px", color:"white"}} disableRipple>Edit</Button>
+                    <Button variant="outlined" onClick={handleClose} style={{width:"235px", color:"white"}} disableRipple>Cancel</Button>
                 </DialogActions>
             </Dialog>
         </>
