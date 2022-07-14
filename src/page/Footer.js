@@ -8,14 +8,14 @@ function Footer() {
       xs={12}
       style={{
         display: 'flex',
-        marginRight: '5px',
         justifyContent: 'center',
         height: '4vh',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#2d4250'
       }}
     >
       <Typography style={{ color: 'white' }}>
-        2022 Highradius Coporation. All rights reserved.
+        <span><a>Privacy Policy </a> | © 2022 Highradius.All Rights Reserved.</span>
       </Typography>
     </Grid>
   );

@@ -13,9 +13,6 @@ export default function Edit(props) {
     const [open,setOpen] = useState(false);
     const [invoicecurrency,setInvoicecurrency] = useState();
     const [customerpaymentterm,setCustomerpaymentterm] = useState();
-    const [defcustpayterms,setDefcustpayterms] = useState();
-    const [definvoicecur,setDefinvoicecur] = useState();
-
 
     const addstyle = {
         textStyle:{
@@ -30,8 +27,8 @@ export default function Edit(props) {
             const slno = id[0];
             await axios.get(`http://localhost:8080/demo/retrieve?sl_no=${slno}`)
             .then((res) => {
-                setDefinvoicecur(res.data[0].invoice_currency);
-                setDefcustpayterms(res.data[0].cust_payment_terms);
+                setInvoicecurrency(res.data[0].invoice_currency);
+                setCustomerpaymentterm(res.data[0].cust_payment_terms);
             })
             .catch((error) => {
                 console.log(error);
@@ -57,8 +54,8 @@ export default function Edit(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(invoicecurrency + " " + customerpaymentterm);
         const slno = id[0];
+        console.log(invoicecurrency + " " + customerpaymentterm);
         await axios.get(`http://localhost:8080/demo/edit?inv_curr=${invoicecurrency}&cust_pay_term=${customerpaymentterm}&sl_no=${slno}`)
         .then((res) => {
             console.log(res);
@@ -74,36 +71,38 @@ export default function Edit(props) {
         <>
             <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disabled={id.length !== 1} disableRipple>EDIT</Button>
             <Dialog open={open} close={handleClose}>
-                <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Edit</DialogTitle>
-                <DialogContent style={{height:"20vh", backgroundColor:"#58687e", color:"white"}}>
+                <DialogTitle style={{backgroundColor:"#2d4250", color:"white"}}>Edit</DialogTitle>
+                <DialogContent style={{height:"20vh", backgroundColor:"#2d4250", color:"white"}}>
                     <div>
                     <TextField
                         style={addstyle.textStyle}
                         label="Invoice Curreny" 
-                        value={definvoicecur}
+                        value={invoicecurrency}
                         required
                         margin="normal"
+                        variant="filled"
                         InputLabelProps={{
                             shrink: true,
                         }}
                         onChange={handleinvoicecurrency}
-                        inputProps={{ style: {color: 'white'}}}
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         style={addstyle.textStyle}
                         label="Cutomer Payment Terms" 
-                        value={defcustpayterms}
+                        value={customerpaymentterm}
                         required
                         margin="normal"
+                        variant="filled"
                         InputLabelProps={{
                             shrink: true,
                         }}
                         onChange={handlecustomerpaymentterms}
-                        inputProps={{ style: {color: 'white'}}}
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     </div>
                 </DialogContent>
-                <DialogActions style={{backgroundColor:"#58687e"}}>
+                <DialogActions style={{backgroundColor:"#2d4250"}}>
                     <Button variant="outlined" onClick={handleSubmit} style={{width:"235px", color:"white"}} disableRipple>Edit</Button>
                     <Button variant="outlined" onClick={handleClose} style={{width:"235px", color:"white"}} disableRipple>Cancel</Button>
                 </DialogActions>

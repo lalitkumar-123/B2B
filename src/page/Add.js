@@ -11,7 +11,7 @@ import axios from 'axios';
 const addstyle = {
   textStyle:{
     position:"relative",
-    marginLeft:"2.5rem",
+    marginLeft:"10rem",
     width:"140px",
   },
   dateStyle:{
@@ -156,8 +156,8 @@ export default function Add()
         <>
             <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disableRipple>ADD</Button>
             <Dialog open={open} close={handleClose} fullWidth>
-                <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Add</DialogTitle>
-                <DialogContent style={{height:"60vh", backgroundColor:"#58687e", color:"white"}}> 
+                <DialogTitle style={{backgroundColor:"#2d4250", color:"white"}}>Add</DialogTitle>
+                <DialogContent style={{height:"60vh", backgroundColor:"#2d4250", color:"white"}}> 
                     <div>
                     <TextField
                         className="inputfield"
@@ -170,7 +170,8 @@ export default function Add()
                         }}
                         onChange={handlebusinesscode}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -183,7 +184,8 @@ export default function Add()
                         }}
                         onChange={handlecustomernumber}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -197,7 +199,8 @@ export default function Add()
                         }}
                         onChange={handlecleardate}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <br/>
                     <TextField
@@ -211,7 +214,8 @@ export default function Add()
                         }}
                         onChange={handlebusinessyear}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -224,7 +228,8 @@ export default function Add()
                         }}
                         onChange={handledocumentid}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -238,7 +243,8 @@ export default function Add()
                         }}
                         onChange={handlepostingdate}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <br/>
                     <TextField
@@ -253,7 +259,8 @@ export default function Add()
                         }}
                         onChange={handledocumentcreatedate}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -267,7 +274,8 @@ export default function Add()
                         }}
                         onChange={handleduedate}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -280,7 +288,8 @@ export default function Add()
                         }}
                         onChange={handleinvoicecurrency}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <br/>
                     <TextField
@@ -294,7 +303,8 @@ export default function Add()
                         }}
                         onChange={handledocumenttype}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -307,7 +317,8 @@ export default function Add()
                         }}
                         onChange={handlepostingid}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -320,7 +331,8 @@ export default function Add()
                         }}
                         onChange={handletotalopenamount}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <br/>
                     <TextField
@@ -335,7 +347,8 @@ export default function Add()
                         }}
                         onChange={handlebaselinecreatedate}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -348,7 +361,8 @@ export default function Add()
                         }}
                         onChange={handlecustomerpaymentterms}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     <TextField
                         className="inputfield"
@@ -361,11 +375,12 @@ export default function Add()
                         }}
                         onChange={handleinvoiceid}
                         size="small"
-                        inputProps={{ style: {color: 'white'}}}
+                        variant='filled'
+                        inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                     />
                     </div>
                 </DialogContent>
-                <DialogActions style={{backgroundColor:"#58687e"}}>
+                <DialogActions style={{backgroundColor:"#2d4250"}}>
                     <Button variant="outlined" onClick={handleSubmit} style={{width:"290px", color:"white"}} disableRipple>Add</Button>
                     <Button variant="outlined" onClick={handleClose} style={{width:"290px", color:"white"}} disableRipple>Cancel</Button>
                 </DialogActions>

@@ -39,11 +39,11 @@
   padding: 0;
 }
 
-/* .inputfield {
+.inputfield {
   background-color: aliceblue !important;
   border-radius: 5px !important;
   margin: 10px 20px !important;
-} */
+}
 
 .add__btn {
   display: flex;

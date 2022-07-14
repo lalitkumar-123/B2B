@@ -11,6 +11,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { DataGrid } from '@mui/x-data-grid';
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import axios from 'axios';
 import '../css/Dashboard.css';
 
@@ -56,7 +57,8 @@ function Dashboard()
     const [invoiceid,setInvoiceid] = useState();
     const [customernum,setCustomernum] = useState();
     const [ids,setIds] = useState([]);
-    const [docids,setDocids] = useState([]); 
+    const [docids,setDocids] = useState([]);
+    const [page,setPage] = useState(10); 
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -138,98 +140,110 @@ function Dashboard()
 
         await axios.post(`http://127.0.0.1:5000/get_prediction?${query}`)
         .then(async (res) => {
-            console.log(res);
-            if(res.data.length == 0)
-            {  
-                for(let i=0; i<docids.length; i++) 
-                {
-                    await axios.get(`http://localhost:8080/demo/predict?doc=${docids[i]}&age=${'N/A'}`)
-                    .then((res) => {
-                        console.log(res);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                }
-            }
-            else
+            console.log(res); 
+
+            for(let i=0; i<docids.length; i++) 
             {
-                for(let i=0; i<res.data.length; i++) 
-                {
-                    await axios.get(`http://localhost:8080/demo/predict?doc=${res.data[i].doc_id}&age=${res.data[i].aging_bucket}`)
-                    .then((res) => {
-                        console.log(res);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                }
+                await axios.get(`http://localhost:8080/demo/predict?doc=${docids[i]}&age=${'N/A'}`)
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            }
+
+            for(let i=0; i<res.data.length; i++) 
+            {
+                await axios.get(`http://localhost:8080/demo/predict?doc=${res.data[i].doc_id}&age=${res.data[i].aging_bucket}`)
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
             }
         })
         .catch((error) => {
             console.log(error);
+            alert("Predict unsuccessful!");
+            return;
         })
-        window.location = "/";
+        
+        const url = "http://localhost:8080/demo/table";
+        await axios({baseURL:url,method:'GET'})
+        .then((res) => setTabledata(res.data))
+        .catch((error) => console.log(error));
+        alert("Predict successfully done!");
+    }
+
+    const reload = (e) => {
+        window.location = '/';
     }
 
     return(
         <>
         <Header/>
-        <div style={{margin: "1rem", color: "white", textAlign:"center", display:"flex"}} className="dashboard">
+        <div style={{margin: "1rem", color: "white", textAlign:"center", display:"flex", backgroundColor:"#2d4250"}} className="dashboard">
             <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handlePreSubmit(e)} disabled={docids.length < 1} disableRipple>PREDICT</Button>
             <Button variant="outlined" style={{width:"14%", height:"4%", color:"white"}} disableRipple>ANALYTICS VIEW</Button>
             <Button variant="outlined" style={{width:"16%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disableRipple>ADVANCED SEARCH</Button>
+            <Button variant="outlined"  onClick={(e) => reload(e)} disableRipple><RefreshRoundedIcon></RefreshRoundedIcon></Button>
             <Dialog open={open} close={handleClose}>
-                    <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Advanced Search</DialogTitle>
-                    <DialogContent  style={{height:"28vh", backgroundColor:"#58687e", color:"white"}}>
+                    <DialogTitle style={{backgroundColor:"#2d4250", color:"white"}}>Advanced Search</DialogTitle>
+                    <DialogContent  style={{height:"28vh", backgroundColor:"#2d4250", color:"white"}}>
                         <div>
                         <TextField
                             style={addstyle.textStyle}
                             label="Doc Id" 
                             required
                             margin="normal"
+                            variant="filled"
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             onChange={handledocumentid}
-                            inputProps={{ style: {color: 'white'}}}
+                            inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                         />
                         <TextField
                             style={addstyle.textStyle}
                             label="Invoice Id" 
                             required
                             margin="normal"
+                            variant="filled"
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             onChange={handleinvoiceid}
-                            inputProps={{ style: {color: 'white'}}}
+                            inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                         />
                         <TextField
                             style={addstyle.textStyle}
                             label="Customer Number" 
                             required
                             margin="normal"
+                            variant="filled"
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             onChange={handlecustomernum}
-                            inputProps={{ style: {color: 'white'}}}
+                            inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                         />
                         <TextField
                             style={addstyle.textStyle}
                             label="Business Year" 
                             required
                             margin="normal"
+                            variant="filled"
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             onChange={handlebusinessyear}
-                            inputProps={{ style: {color: 'white'}}}
+                            inputProps={{ style: {color: 'black', backgroundColor:'aliceblue'}}}
                         />
                         </div>
                     </DialogContent>
-                    <DialogActions style={{backgroundColor:"#58687e"}}>
+                    <DialogActions style={{backgroundColor:"#2d4250"}}>
                         <Button variant="outlined" onClick={handleSubmit}  style={{width:"288px", color:"white"}} disableRipple>Search</Button>
                         <Button variant="outlined" onClick={handleClose}  style={{width:"288px", color:"white"}} disableRipple>Cancel</Button>
                     </DialogActions>
@@ -239,21 +253,25 @@ function Dashboard()
             <Edit data={ids}/>
             <Delete data={ids}/>
         </div>
-        <div style={{ height: 400, width: '100%'}}>
+        <div style={{ height: 400, width: '100%', backgroundColor:"#2d4250"}}>
           <DataGrid
               rows={tabledata}
               columns={columns}
+              autoHeight
               rowHeight={27}
               style={{ display:"flex",justifyContent:"center", color:"white"}}
-              pageSize={10}
+              pageSize={page}
+              onPageSizeChange={(newpage) => setPage(newpage)}
               disableColumnMenu
-              rowsPerPageOptions={[10]}
+              rowsPerPageOptions={[5,10,15]}
               checkboxSelection
               onSelectionModelChange={(id) => {
                 setIds(id);
                 const dump = [];
-                for(let i = 0; i < id.length; i++)
+                for(let i=0; i<id.length; i++)
                 {
+                    console.log(id[i]);
+                    console.log(tabledata[id[i]]['doc_id']);
                     dump.push(tabledata[id[i]-1]['doc_id']);  
                 }
                 setDocids(dump);

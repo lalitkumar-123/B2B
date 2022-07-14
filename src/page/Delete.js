@@ -40,13 +40,13 @@ export default function Delete(props) {
     <>
         <Button variant="outlined" style={{width:"10%", height:"4%", color:"white"}} onClick={(e) => handleClickOpen(e)} disabled={id.length < 1} disableRipple>DELETE</Button>
         <Dialog open={open} close={handleClose}>
-                <DialogTitle style={{backgroundColor:"#58687e", color:"white"}}>Delete Records ?</DialogTitle>
-                <DialogContent style={{height:"20vh", backgroundColor:"#58687e", color:"white"}}>
+                <DialogTitle style={{backgroundColor:"#2d4250", color:"white"}}>Delete Records ?</DialogTitle>
+                <DialogContent style={{height:"20vh", backgroundColor:"#2d4250", color:"white"}}>
                     <div>
                       <p>Are you sure you want to delete these record[s]?</p>
                     </div>
                 </DialogContent>
-                <DialogActions style={{backgroundColor:"#58687e"}}>
+                <DialogActions style={{backgroundColor:"#2d4250"}}>
                     <Button variant="outlined" onClick={handleSubmit} style={{width:"200px", color:"white"}} disableRipple>Delete</Button>
                     <Button variant="outlined" onClick={handleClose} style={{width:"200px", color:"white"}} disableRipple>Cancel</Button>
                 </DialogActions>
